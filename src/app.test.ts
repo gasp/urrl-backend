@@ -20,6 +20,9 @@ describe('app testing', () => {
     await request(app).get(`/l/${addAction.body.short}`)
     await request(app).get(`/l/${addAction.body.short}`)
 
+    // wait for sql database to update
+    new Promise(r => setTimeout(r, 200))
+
     const analyticsAction = await request(app)
       .post('/api/shorturl/analytics')
       .send({ short })
