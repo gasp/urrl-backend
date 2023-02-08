@@ -4,6 +4,7 @@ import bodyParser from 'body-parser'
 import { intToShortUrl, shortUrlToInt } from './lib/shortUrl.js'
 import { isValidHttpUrl } from './lib/isValidUrl.js'
 import { Link } from './models/index.js'
+import { errorHandler, NotFoundError } from './errors.js'
 
 const app: Express = express()
 
@@ -72,18 +73,6 @@ app.post(
     }
   },
 )
-const errorHandler = (
-  error: Error,
-  _req: Request,
-  res: Response,
-  _next: Function,
-) => {
-  res.status(500)
-  if (process.env.NODE_ENV === 'production') {
-    res.json({ error: error.message })
-  }
-  res.json({ error: error.message, stack: error.stack })
-}
 
 app.use(errorHandler)
 
