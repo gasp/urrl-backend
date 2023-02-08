@@ -9,5 +9,21 @@ describe('app testing', () => {
     expect(response.body.url).toEqual(url)
     expect(response.body.short).toBeDefined()
   })
+
+  it('increments links when clicked', async () => {
+    const url = 'https://www.yahoo.com'
+    const addAction = await request(app).post('/api/shorturl').send({ url })
+    const { short } = addAction.body
+    expect(short).toBeDefined()
+
+    // click twice
+    await request(app).get(`/l/${addAction.body.short}`)
+    await request(app).get(`/l/${addAction.body.short}`)
+
+    const analyticsAction = await request(app)
+      .post('/api/shorturl/analytics')
+      .send({ short })
+
+    expect(analyticsAction.body.clicks).toBe(2)
   })
 })
